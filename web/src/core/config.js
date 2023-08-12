@@ -3,11 +3,12 @@
  */
 
 const config = {
-  appName: 'Gin-Vue-Admin',
-  appLogo: 'https://www.gin-vue-admin.com/img/logo.png',
+  appName: '红土大陆',
+  appLogo: '/src/assets/Red_Wool_JE3_BE3.png',
   showViteLogo: true
 }
 
+// 项目启动的提示
 export const viteLogo = (env) => {
   if (config.showViteLogo) {
     const chalk = require('chalk')

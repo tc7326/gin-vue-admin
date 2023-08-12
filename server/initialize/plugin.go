@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/register"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/middleware"
@@ -23,6 +24,7 @@ func InstallPlugin(Router *gin.Engine) {
 	PrivateGroup := Router.Group("")
 	fmt.Println("鉴权插件安装==》", PrivateGroup)
 	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+
 	//  添加跟角色挂钩权限的插件 示例 本地示例模式于在线仓库模式注意上方的import 可以自行切换 效果相同
 	PluginInit(PrivateGroup, email.CreateEmailPlug(
 		global.GVA_CONFIG.Email.To,
@@ -33,4 +35,7 @@ func InstallPlugin(Router *gin.Engine) {
 		global.GVA_CONFIG.Email.Port,
 		global.GVA_CONFIG.Email.IsSSL,
 	))
+
+	// 注册功能 插件注册 888 为普通用户ID
+	PluginInit(PublicGroup, register.CreateRegisterPlug(888))
 }

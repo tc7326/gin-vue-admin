@@ -1,8 +1,7 @@
 <template>
   <div id="userLayout" class="w-full h-full relative">
     <div
-      class="rounded-lg flex items-center justify-evenly w-full h-full bg-white md:w-screen md:h-screen md:bg-[#194bfb]"
-    >
+      class="rounded-lg flex items-center justify-evenly w-full h-full bg-white md:w-screen md:h-screen md:bg-[#194bfb]">
       <div class="md:w-3/5 w-10/12 h-full flex items-center justify-evenly">
         <div class="oblique h-[130%] w-3/5 bg-white transform -rotate-12 absolute -ml-52" />
         <!-- 分割斜块 -->
@@ -13,27 +12,18 @@
             </div>
             <div class="mb-9">
               <p class="text-center text-4xl font-bold">{{ $GIN_VUE_ADMIN.appName }}</p>
-              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">A management platform using Golang and Vue
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">
               </p>
             </div>
-            <el-form
-              ref="loginForm"
-              :model="loginFormData"
-              :rules="rules"
-              :validate-on-rule-change="false"
-              @keyup.enter="submitForm"
-            >
+            <el-form ref="loginForm" :model="loginFormData" :rules="rules" :validate-on-rule-change="false"
+              @keyup.enter="submitForm">
+              <!-- keyup.enter 是 按回车后执行的fun -->
               <el-form-item prop="username" class="mb-6">
                 <el-input v-model="loginFormData.username" size="large" placeholder="请输入用户名" suffix-icon="user" />
               </el-form-item>
               <el-form-item prop="password" class="mb-6">
-                <el-input
-                  v-model="loginFormData.password"
-                  show-password
-                  size="large"
-                  type="password"
-                  placeholder="请输入密码"
-                />
+                <el-input v-model="loginFormData.password" show-password size="large" type="password"
+                  placeholder="请输入密码" />
               </el-form-item>
               <el-form-item v-if="loginFormData.openCaptcha" prop="captcha" class="mb-6">
                 <div class="flex w-full justify-between">
@@ -44,26 +34,24 @@
                 </div>
               </el-form-item>
               <el-form-item class="mb-6">
-                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large" @click="submitForm">登 录</el-button>
+                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
+                  @click="submitForm">登&nbsp;录</el-button>
               </el-form-item>
               <el-form-item class="mb-6">
-                <el-button
-                  class="shadow shadow-blue-600 h-11 w-full"
-                  type="primary"
-                  size="large"
-                  @click="checkInit"
-                >前往初始化</el-button>
-
+                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
+                  @click="submitReg">注&nbsp;册</el-button>
+              </el-form-item>
+              <el-form-item class="mb-6">
+                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
+                  @click="checkInit">前往初始化</el-button>
               </el-form-item>
             </el-form>
           </div>
         </div>
       </div>
-      <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
-        class="h-full"
-        src="@/assets/login_right_banner.jpg"
-        alt="banner"
-      ></div>
+      <div class="hidden md:block w-1/2 float-right bg-[#194bfb] text-center">
+        <img class="h-full w-1/2" src="@/assets/ic_piglin_loading.gif" alt="banner">
+      </div>
     </div>
 
     <BottomInfo class="left-0 right-0 absolute bottom-3 mx-auto  w-full z-20">
@@ -118,7 +106,7 @@ const checkPassword = (rule, value, callback) => {
 
 // 获取验证码
 const loginVerify = () => {
-  captcha({}).then(async(ele) => {
+  captcha({}).then(async (ele) => {
     rules.captcha.push({
       max: ele.data.captchaLength,
       min: ele.data.captchaLength,
@@ -136,8 +124,8 @@ loginVerify()
 const loginForm = ref(null)
 const picPath = ref('')
 const loginFormData = reactive({
-  username: 'admin',
-  password: '123456',
+  username: '',
+  password: '',
   captcha: '',
   captchaId: '',
   openCaptcha: false,
@@ -153,12 +141,15 @@ const rules = reactive({
   ],
 })
 
+// 用户数据
 const userStore = useUserStore()
-const login = async() => {
+// 异步登录请求？包括保存数据等操作？
+const login = async () => {
   return await userStore.LoginIn(loginFormData)
 }
+// 登录提交
 const submitForm = () => {
-  loginForm.value.validate(async(v) => {
+  loginForm.value.validate(async (v) => {
     if (v) {
       const flag = await login()
       if (!flag) {
@@ -176,8 +167,33 @@ const submitForm = () => {
   })
 }
 
+// 玩家注册异步请求
+const register = async () => {
+  return await userStore.UserRegister(loginFormData)
+}
+
+// 玩家注册提交
+const submitReg = () => {
+  loginForm.value.validate(async (v) => {
+    if (v) {
+      const flag = await register()
+      if (!flag) {
+        loginVerify()
+      }
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '请正确填写登录信息',
+        showClose: true,
+      })
+      loginVerify()
+      return false
+    }
+  })
+}
+
 // 跳转初始化
-const checkInit = async() => {
+const checkInit = async () => {
   const res = await checkDB()
   if (res.code === 0) {
     if (res.data?.needInit) {

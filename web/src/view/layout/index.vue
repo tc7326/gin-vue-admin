@@ -274,11 +274,13 @@ const reload = async() => {
   }, 400)
 }
 
+//打开侧栏的影音 默认没有
 const isShadowBg = ref(false)
 const totalCollapse = () => {
   isCollapse.value = !isCollapse.value
   isSider.value = !isCollapse.value
-  isShadowBg.value = !isCollapse.value
+  //官方案例有问题 这里会有bug
+  //isShadowBg.value = !isCollapse.value
   emitter.emit('collapse', isCollapse.value)
 }
 

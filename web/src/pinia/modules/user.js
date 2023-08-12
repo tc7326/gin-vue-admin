@@ -1,4 +1,4 @@
-import { login, getUserInfo, setSelfInfo } from '@/api/user'
+import { login, getUserInfo, setSelfInfo, userRegister } from '@/api/user'
 import { jsonInBlacklist } from '@/api/jwt'
 import router from '@/router/index'
 import { ElLoading, ElMessage } from 'element-plus'
@@ -143,6 +143,37 @@ export const useUserStore = defineStore('user', () => {
     window.localStorage.setItem('token', token.value)
   })
 
+
+  //用户注册 玩家自己注册 不是管理员生成的
+  const UserRegister = async(loginInfo) => {
+    loadingInstance.value = ElLoading.service({
+      fullscreen: true,
+      text: '注册中，请稍候...',
+    })
+    try {
+      const res = await userRegister(loginInfo)
+      if (res.code === 0) {
+        setUserInfo(res.data.user)
+        setToken(res.data.token)
+        const routerStore = useRouterStore()
+        await routerStore.SetAsyncRouter()
+        const asyncRouters = routerStore.asyncRouters
+        asyncRouters.forEach((asyncRouter) => {
+          router.addRoute(asyncRouter)
+        })
+        router.push({ name: userInfo.value.authority.defaultRouter })
+        return true
+      }
+    } catch (e) {
+      loadingInstance.value.close()
+    }
+    loadingInstance.value.close()
+  }
+
+
+
+
+
   return {
     userInfo,
     token,
@@ -158,6 +189,7 @@ export const useUserStore = defineStore('user', () => {
     baseColor,
     activeColor,
     loadingInstance,
-    ClearStorage
+    ClearStorage,
+    UserRegister
   }
 })
