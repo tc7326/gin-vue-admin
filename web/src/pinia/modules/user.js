@@ -1,10 +1,12 @@
-import { login, getUserInfo, setSelfInfo, userRegister } from '@/api/user'
+import { login, getUserInfo, setSelfInfo } from '@/api/user'
 import { jsonInBlacklist } from '@/api/jwt'
 import router from '@/router/index'
 import { ElLoading, ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { useRouterStore } from './router'
+// 导入注册插件里的user.js
+import { userRegister } from '@/plugin/register/api/user'
 
 export const useUserStore = defineStore('user', () => {
   const loadingInstance = ref(null)
@@ -144,8 +146,8 @@ export const useUserStore = defineStore('user', () => {
   })
 
 
-  //用户注册 玩家自己注册 不是管理员生成的
-  const UserRegister = async(loginInfo) => {
+  // 玩家自己注册的fun
+  const Register = async(loginInfo) => {
     loadingInstance.value = ElLoading.service({
       fullscreen: true,
       text: '注册中，请稍候...',
@@ -171,9 +173,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
 
-
-
-
   return {
     userInfo,
     token,
@@ -190,6 +189,6 @@ export const useUserStore = defineStore('user', () => {
     activeColor,
     loadingInstance,
     ClearStorage,
-    UserRegister
+    Register
   }
 })

@@ -19,6 +19,7 @@ type DBApi struct{}
 // @Success  200   {object}  response.Response{data=string}  "初始化用户数据库"
 // @Router   /init/initdb [post]
 func (i *DBApi) InitDB(c *gin.Context) {
+	global.GVA_LOG.Info("进入创建数据库的路由")
 	if global.GVA_DB != nil {
 		global.GVA_LOG.Error("已存在数据库配置!")
 		response.FailWithMessage("已存在数据库配置", c)
@@ -30,11 +31,14 @@ func (i *DBApi) InitDB(c *gin.Context) {
 		response.FailWithMessage("参数校验不通过", c)
 		return
 	}
+	global.GVA_LOG.Info("创建数据库的参数校验通过")
+	//具体de创建数据库的业务
 	if err := initDBService.InitDB(dbInfo); err != nil {
 		global.GVA_LOG.Error("自动创建数据库失败!", zap.Error(err))
-		response.FailWithMessage("自动创建数据库失败，请查看后台日志，检查后在进行初始化", c)
+		response.FailWithMessage("自动创建数据库失败，请查看后台日志，检查后再进行初始化", c)
 		return
 	}
+	global.GVA_LOG.Info("数据库创建完毕 给前端响应 200")
 	response.OkWithMessage("自动创建数据库成功", c)
 }
 

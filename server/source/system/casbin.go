@@ -39,12 +39,16 @@ func (i initCasbin) InitializerName() string {
 	return entity.TableName()
 }
 
+// 权限组API数据初始化
 func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {
 		return ctx, system.ErrMissingDBContext
 	}
 	entities := []adapter.CasbinRule{
+
+		//超管API 默认数据填充
+
 		{Ptype: "p", V0: "888", V1: "/user/admin_register", V2: "POST"},
 
 		{Ptype: "p", V0: "888", V1: "/api/createApi", V2: "POST"},
@@ -157,86 +161,22 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{Ptype: "p", V0: "888", V1: "/chatGpt/getSK", V2: "GET"},
 		{Ptype: "p", V0: "888", V1: "/chatGpt/deleteSK", V2: "DELETE"},
 
-		{Ptype: "p", V0: "8881", V1: "/user/admin_register", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/createApi", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/getApiList", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/getApiById", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/deleteApi", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/updateApi", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/api/getAllApis", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/authority/createAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/authority/deleteAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/authority/getAuthorityList", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/authority/setDataAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/getMenu", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/getMenuList", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/addBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/getBaseMenuTree", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/addMenuAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/getMenuAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/deleteBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/updateBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/menu/getBaseMenuById", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/user/changePassword", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/user/getUserList", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/user/setUserAuthority", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/fileUploadAndDownload/upload", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/fileUploadAndDownload/getFileList", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/fileUploadAndDownload/deleteFile", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/fileUploadAndDownload/editFileName", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/casbin/updateCasbin", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/casbin/getPolicyPathByAuthorityId", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/jwt/jsonInBlacklist", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/system/getSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/system/setSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "PUT"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "DELETE"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "GET"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customerList", V2: "GET"},
-		{Ptype: "p", V0: "8881", V1: "/user/getUserInfo", V2: "GET"},
-
-		{Ptype: "p", V0: "9528", V1: "/user/admin_register", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/createApi", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/getApiList", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/getApiById", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/deleteApi", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/updateApi", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/api/getAllApis", V2: "POST"},
-
-		{Ptype: "p", V0: "9528", V1: "/authority/createAuthority", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/authority/deleteAuthority", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/authority/getAuthorityList", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/authority/setDataAuthority", V2: "POST"},
-
-		{Ptype: "p", V0: "9528", V1: "/menu/getMenu", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/getMenuList", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/addBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/getBaseMenuTree", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/addMenuAuthority", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/getMenuAuthority", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/deleteBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/updateBaseMenu", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/menu/getBaseMenuById", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/user/changePassword", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/user/getUserList", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/user/setUserAuthority", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/fileUploadAndDownload/upload", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/fileUploadAndDownload/getFileList", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/fileUploadAndDownload/deleteFile", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/fileUploadAndDownload/editFileName", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/casbin/updateCasbin", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/casbin/getPolicyPathByAuthorityId", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/jwt/jsonInBlacklist", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/system/getSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/system/setSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "PUT"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "GET"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "DELETE"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customerList", V2: "GET"},
-		{Ptype: "p", V0: "9528", V1: "/autoCode/createTemp", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/user/getUserInfo", V2: "GET"},
+		//普通玩家API 默认数据填充
+		{Ptype: "p", V0: "1", V1: "/menu/getMenu", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/menu/getMenuList", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/menu/getBaseMenuTree", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/menu/getMenuAuthority", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/menu/getBaseMenuById", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/user/changePassword", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/user/getUserList", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/fileUploadAndDownload/upload", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/fileUploadAndDownload/getFileList", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/fileUploadAndDownload/deleteFile", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/fileUploadAndDownload/editFileName", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/casbin/updateCasbin", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/casbin/getPolicyPathByAuthorityId", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/jwt/jsonInBlacklist", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/user/getUserInfo", V2: "GET"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, "Casbin 表 ("+i.InitializerName()+") 数据初始化失败!")
@@ -250,7 +190,7 @@ func (i *initCasbin) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
-	if errors.Is(db.Where(adapter.CasbinRule{Ptype: "p", V0: "9528", V1: "/user/getUserInfo", V2: "GET"}).
+	if errors.Is(db.Where(adapter.CasbinRule{Ptype: "p", V0: "1", V1: "/user/getUserInfo", V2: "GET"}).
 		First(&adapter.CasbinRule{}).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
 		return false
 	}

@@ -3,6 +3,7 @@
     <div
       class="rounded-lg flex items-center justify-evenly w-full h-full bg-white md:w-screen md:h-screen md:bg-[#194bfb]">
       <div class="md:w-3/5 w-10/12 h-full flex items-center justify-evenly">
+        <!-- 页面背景时蓝色的 这是加了一个白色的斜面 -->
         <div class="oblique h-[130%] w-3/5 bg-white transform -rotate-12 absolute -ml-52" />
         <!-- 分割斜块 -->
         <div class="z-[999] pt-12 pb-10 md:w-96 w-full  rounded-lg flex flex-col justify-between box-border">
@@ -11,7 +12,7 @@
               <img class="w-24" :src="$GIN_VUE_ADMIN.appLogo" alt>
             </div>
             <div class="mb-9">
-              <p class="text-center text-4xl font-bold">{{ $GIN_VUE_ADMIN.appName }}</p>
+              <p class="text-center text-4xl font-bold">账号登录</p>
               <p class="text-center text-sm font-normal text-gray-500 mt-2.5">
               </p>
             </div>
@@ -39,7 +40,7 @@
               </el-form-item>
               <el-form-item class="mb-6">
                 <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
-                  @click="submitReg">注&nbsp;册</el-button>
+                  @click="GoRegister">没账号，去注册</el-button>
               </el-form-item>
               <el-form-item class="mb-6">
                 <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
@@ -167,29 +168,11 @@ const submitForm = () => {
   })
 }
 
-// 玩家注册异步请求
-const register = async () => {
-  return await userStore.UserRegister(loginFormData)
-}
-
-// 玩家注册提交
-const submitReg = () => {
-  loginForm.value.validate(async (v) => {
-    if (v) {
-      const flag = await register()
-      if (!flag) {
-        loginVerify()
-      }
-    } else {
-      ElMessage({
-        type: 'error',
-        message: '请正确填写登录信息',
-        showClose: true,
-      })
-      loginVerify()
-      return false
-    }
-  })
+// 去注册页
+const GoRegister = () => {
+  //导航到注册页面
+  // router.push({ name: 'Register', replace: true })//如果携带 replace 则浏览器的返回按钮会返回到选项卡
+  router.push({ name: 'Register'})
 }
 
 // 跳转初始化

@@ -1,7 +1,8 @@
 <template>
   <div class="rounded-lg  flex items-center justify-evenly w-full h-full relative bg-white md:w-screen md:h-screen md:bg-[#194bfb] overflow-hidden">
-    <div class="rounded-md w-full h-full flex items-center justify-center overflow-hidden">
-      <div class="oblique h-[130%] w-3/5 bg-white transform -rotate-12 absolute -ml-80" />
+    <div class="md:w-3/5 w-10/12 h-full flex items-center justify-evenly">
+        <!-- 页面背景时蓝色的 这是加了一个白色的斜面 -->
+      <div class="oblique h-[130%] w-3/5 bg-white transform -rotate-12 absolute -ml-52" />
       <div v-if="!page.showForm" :class="[page.showReadme ?'slide-out-right' :'slide-in-fwd-top' ]">
         <div class=" text-lg">
           <div class="font-sans text-4xl font-bold text-center mb-4">GIN-VUE-ADMIN</div>
@@ -21,9 +22,10 @@
           </p>
         </div>
       </div>
+      <!-- slide-out-right 这些是进出的动画 应该 -->
       <div
         v-if="page.showForm "
-        :class="[ page.showForm ? 'slide-in-left' : 'slide-out-right' ]"
+        :class="[ page.showForm ? 'slide-in-left' : 'slide-out-right' ]" 
         class="w-96"
       >
         <el-form ref="formRef" :model="form" label-width="100px" size="large">
@@ -63,11 +65,9 @@
       </div>
     </div>
 
-    <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
-      class="h-full"
-      src="@/assets/login_right_banner.jpg"
-      alt="banner"
-    ></div>
+    <div class="hidden md:block w-1/2 float-right bg-[#194bfb] text-center">
+        <img class="h-full w-1/2" src="@/assets/ic_piglin_loading.gif" alt="banner">
+      </div>
   </div>
 </template>
 
@@ -198,6 +198,7 @@ const onSubmit = async() => {
         type: 'success',
         message: res.msg,
       })
+      //导航到登录页面
       router.push({ name: 'Login' })
     }
     loading.close()

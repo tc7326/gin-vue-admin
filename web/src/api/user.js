@@ -165,15 +165,3 @@ export const resetPassword = (data) => {
     data: data
   })
 }
-
-// @Summary 用户注册 玩家自己注册 不是管理员生成的
-// @Produce  application/json
-// @Param data body {username:"string",password:"string"}
-// @Router /register/register [post]
-export const userRegister = (data) => {
-  return service({
-      url: "/register/register",
-      method: "post",
-      data: data,
-  });
-};

@@ -17,8 +17,10 @@ import (
 type RegisterService struct{}
 
 func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, err error) {
+
+	//空值校验
 	if err := utils.Verify(req, utils.LoginVerify); err != nil {
-		// TODO resopne need
+		// 某个参数为空
 		return res, err
 	}
 	var (
@@ -29,6 +31,8 @@ func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, e
 	if !store.Verify(req.CaptchaId, req.Captcha, true) {
 		return res, errors.New("验证码错误")
 	}
+
+	//先查数据库有没有这个人
 	u := &system.SysUser{Username: req.Username, Password: req.Password}
 	err = global.GVA_DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").First(&user).Error
 	if err == nil {
@@ -42,10 +46,11 @@ func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, e
 	sysAuthority.Username = u.Username
 	sysAuthority.NickName = u.NickName
 	sysAuthority.Password = u.Password
-	// TODO 角色ID
+	//设置权限组
 	sysAuthority.AuthorityId = plugGlobal.GlobalConfig.AuthorityId
 	sysAuthority.AuthorityIds = append(sysAuthority.AuthorityIds, plugGlobal.GlobalConfig.AuthorityId)
-	// 因为上面定义过，且得到了数据库默认的值，所以直接使用
+
+	// 定义 新注册的用户的结构体
 	user.Password = u.Password
 	user.UUID = uuid.Must(uuid.NewV4())
 	user.Username = u.Username
@@ -54,8 +59,8 @@ func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, e
 
 	for _, v := range sysAuthority.AuthorityIds {
 		user.Authorities = append(user.Authorities, system.SysAuthority{
-			AuthorityId: v,
-			//DefaultRouter: "dashboard", //TODO 疑问，系统注册的时候有这个参数
+			AuthorityId:   v,
+			DefaultRouter: "dashboard", //配置默认路由 就用户登录后默认是那个页面
 		})
 	}
 

@@ -10,6 +10,7 @@ type RegisterPlugin struct {
 }
 
 func CreateRegisterPlug(AuthorityId uint) *RegisterPlugin {
+	//注册插件的同时 设置 玩家注册的默认用户组
 	global.GlobalConfig.AuthorityId = AuthorityId
 	return &RegisterPlugin{}
 }

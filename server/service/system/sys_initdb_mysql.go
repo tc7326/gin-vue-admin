@@ -42,6 +42,7 @@ func (h MysqlInitHandler) WriteConfig(ctx context.Context) error {
 
 // EnsureDB 创建数据库并初始化 mysql
 func (h MysqlInitHandler) EnsureDB(ctx context.Context, conf *request.InitDB) (next context.Context, err error) {
+	global.GVA_LOG.Info("进入 初始化 mysql 数据库的 业务")
 	if s, ok := ctx.Value("dbtype").(string); !ok || s != "mysql" {
 		return ctx, ErrDBTypeMismatch
 	}

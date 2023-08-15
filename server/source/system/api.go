@@ -37,6 +37,7 @@ func (i *initApi) TableCreated(ctx context.Context) bool {
 	return db.Migrator().HasTable(&sysModel.SysApi{})
 }
 
+// api表初始化
 func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

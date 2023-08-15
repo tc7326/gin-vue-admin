@@ -36,6 +36,6 @@ func InstallPlugin(Router *gin.Engine) {
 		global.GVA_CONFIG.Email.IsSSL,
 	))
 
-	// 注册功能 插件注册 888 为普通用户ID
-	PluginInit(PublicGroup, register.CreateRegisterPlug(888))
+	// 注册功能 插件的注册 设置注册的默认用户组是 1 为普通玩家
+	PluginInit(PublicGroup, register.CreateRegisterPlug(1))
 }

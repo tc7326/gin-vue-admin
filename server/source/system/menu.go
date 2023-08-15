@@ -44,6 +44,7 @@ func (i *initMenu) TableCreated(ctx context.Context) bool {
 		m.HasTable(&SysBaseMenuBtn{})
 }
 
+// 菜单数据初始化
 func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, err error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

@@ -83,7 +83,7 @@ hua-wei-obs:
     access-key: you-access-key
     secret-key: you-secret-key
 jwt:
-    signing-key: 4988f050-0e02-4327-98a5-12cc986faad7
+    signing-key: 53de4ba8-9fab-40c4-b776-1cc775a0a2d9
     expires-time: 7d
     buffer-time: 1d
     issuer: qmPlus
@@ -105,7 +105,7 @@ mssql:
     log-mode: ""
     log-zap: false
 mysql:
-    path: localhost
+    path: 127.0.0.1
     port: "3306"
     config: charset=utf8mb4&parseTime=True&loc=Local
     db-name: db_gva

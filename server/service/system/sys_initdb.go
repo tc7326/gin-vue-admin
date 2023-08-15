@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"sort"
 )
@@ -87,6 +88,8 @@ type InitDBService struct{}
 
 // InitDB 创建数据库并初始化 总入口
 func (initDBService *InitDBService) InitDB(conf request.InitDB) (err error) {
+	global.GVA_LOG.Info("进入 初始化 数据库的 业务")
+
 	ctx := context.TODO()
 	if len(initializers) == 0 {
 		return errors.New("无可用初始化过程，请检查初始化是否已执行完成")
@@ -112,19 +115,25 @@ func (initDBService *InitDBService) InitDB(conf request.InitDB) (err error) {
 	}
 	ctx, err = initHandler.EnsureDB(ctx, &conf)
 	if err != nil {
+		global.GVA_LOG.Error("初始化具体的数据库业务时 发生了异常", zap.Error(err))
 		return err
 	}
 
 	db := ctx.Value("db").(*gorm.DB)
 	global.GVA_DB = db
 
+	//初始化表
 	if err = initHandler.InitTables(ctx, initializers); err != nil {
+		global.GVA_LOG.Error("初始化具体的表时 发生了异常", zap.Error(err))
 		return err
 	}
+	global.GVA_LOG.Info("初始化表完成")
+	//初始化数据
 	if err = initHandler.InitData(ctx, initializers); err != nil {
+		global.GVA_LOG.Error("初始化具体的数据 发生了异常", zap.Error(err))
 		return err
 	}
-
+	global.GVA_LOG.Info("初始化数据完成")
 	if err = initHandler.WriteConfig(ctx); err != nil {
 		return err
 	}

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+// 页面的路由 / 重定向到 /login
 const routes = [{
   path: '/',
   redirect: '/login'
@@ -13,6 +14,11 @@ const routes = [{
   path: '/login',
   name: 'Login',
   component: () => import('@/view/login/index.vue')
+},
+{
+  path: '/register',//新增mc注册的路由
+  name: 'Register',
+  component: () => import('@/plugin/register/view/index.vue')
 },
 {
   path: '/:catchAll(.*)',

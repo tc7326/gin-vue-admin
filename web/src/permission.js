@@ -4,7 +4,8 @@ import getPageTitle from '@/utils/page'
 import router from '@/router'
 import Nprogress from 'nprogress'
 
-const whiteList = ['Login', 'Init']
+//路由白名单？否则会控制token
+const whiteList = ['Login', 'Init', 'Register']
 
 const getRouter = async(userStore) => {
   const routerStore = useRouterStore()

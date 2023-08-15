@@ -81,6 +81,7 @@ service.interceptors.response.use(
       if (response.data.data && response.data.data.reload) {
         userStore.token = ''
         localStorage.clear()
+        //应该是 token异常时 导航到 登录页
         router.push({ name: 'Login', replace: true })
       }
       return response.data.msg ? response.data : response
@@ -119,6 +120,7 @@ service.interceptors.response.use(
             const userStore = useUserStore()
             userStore.token = ''
             localStorage.clear()
+            //导航到登录页
             router.push({ name: 'Login', replace: true })
           })
         break
