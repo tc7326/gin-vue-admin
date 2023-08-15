@@ -22,10 +22,11 @@ yarn-error.log*
 *.sln
 *.sw?
 
+# 忽略 log里的文件 保留log文件夹
 /server/log/
 /server/gva
 /server/latest_log
-/server/uploads/file
+/server/uploads/file/
 
 *.iml
 web/.pnpm-debug.log
