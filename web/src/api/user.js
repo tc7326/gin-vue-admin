@@ -23,6 +23,20 @@ export const captcha = (data) => {
   })
 }
 
+// @Tags itloser.top
+// @Summary 用户注册 发送邮件验证码
+// @Produce  application/json
+// @Param data body email_response.Email true "发送邮件必须的参数"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"发送成功"}"
+// @Router /base/captcha-e [post]
+export const sendEmailCaptcha = (data) => {
+  return service({
+    url: '/base/captcha-e',
+    method: 'post',
+    data
+  })
+}
+
 // @Summary 用户注册 管理员新增普通用户
 // @Produce  application/json
 // @Param data body {username:"string",password:"string"}

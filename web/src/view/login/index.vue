@@ -12,9 +12,9 @@
               <img class="w-24" :src="$GIN_VUE_ADMIN.appLogo" alt>
             </div>
             <div class="mb-9">
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">&nbsp;</p>
               <p class="text-center text-4xl font-bold">账号登录</p>
-              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">
-              </p>
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5"></p>
             </div>
             <el-form ref="loginForm" :model="loginFormData" :rules="rules" :validate-on-rule-change="false"
               @keyup.enter="submitForm">
@@ -29,7 +29,7 @@
               <el-form-item v-if="loginFormData.openCaptcha" prop="captcha" class="mb-6">
                 <div class="flex w-full justify-between">
                   <el-input v-model="loginFormData.captcha" placeholder="请输入验证码" size="large" class="flex-1 mr-5" />
-                  <div class="w-1/3 h-11 bg-[#c3d4f2] rounded">
+                  <div class="w-2/5 h-11 bg-[#c3d4f2] rounded">
                     <img v-if="picPath" class="w-full h-full" :src="picPath" alt="请输入验证码" @click="loginVerify()">
                   </div>
                 </div>
@@ -39,13 +39,16 @@
                   @click="submitForm">登&nbsp;录</el-button>
               </el-form-item>
               <el-form-item class="mb-6">
-                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
+                <el-button class="h-11 w-full" size="large"
                   @click="GoRegister">没账号，去注册</el-button>
               </el-form-item>
-              <el-form-item class="mb-6">
+
+              <!-- 数据库初始化 初始化完成后 屏蔽此内容 -->
+              <!-- <el-form-item class="mb-6">
                 <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
                   @click="checkInit">前往初始化</el-button>
-              </el-form-item>
+              </el-form-item> -->
+
             </el-form>
           </div>
         </div>
@@ -119,6 +122,7 @@ const loginVerify = () => {
     loginFormData.openCaptcha = ele.data.openCaptcha
   })
 }
+//进入页面时 先获取验证码
 loginVerify()
 
 // 登录相关操作

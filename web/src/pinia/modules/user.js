@@ -154,6 +154,7 @@ export const useUserStore = defineStore('user', () => {
     })
     try {
       const res = await userRegister(loginInfo)
+      //请求成功
       if (res.code === 0) {
         setUserInfo(res.data.user)
         setToken(res.data.token)

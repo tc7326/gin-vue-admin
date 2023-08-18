@@ -12,34 +12,42 @@
               <img class="w-24" :src="$GIN_VUE_ADMIN.appLogo" alt>
             </div>
             <div class="mb-9">
-              <p class="text-center text-4xl font-bold">注册</p>
-              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">
-              </p>
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">&nbsp;</p>
+              <p class="text-center text-4xl font-bold">账号注册</p>
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5"></p>
             </div>
             <el-form ref="loginForm" :model="loginFormData" :rules="rules" :validate-on-rule-change="false"
               @keyup.enter="submitReg">
-              <!-- keyup.enter 是 按回车后执行的fun -->
+              <!-- 账号 keyup.enter 是 按回车后执行的fun -->
               <el-form-item prop="username" class="mb-6">
                 <el-input v-model="loginFormData.username" size="large" placeholder="请输入用户名" suffix-icon="user" />
               </el-form-item>
+              <!-- 密码 -->
               <el-form-item prop="password" class="mb-6">
                 <el-input v-model="loginFormData.password" show-password size="large" type="password"
                   placeholder="请输入密码" />
               </el-form-item>
+              <!-- 加入邮箱输入框 -->
+              <el-form-item prop="email" class="mb-6">
+                <el-input v-model="loginFormData.email" size="large" placeholder="请输入QQ邮箱" type="email" />
+              </el-form-item>
+              <!-- 验证码 -->
               <el-form-item v-if="loginFormData.openCaptcha" prop="captcha" class="mb-6">
                 <div class="flex w-full justify-between">
+                  <!-- 验证码输入框 -->
                   <el-input v-model="loginFormData.captcha" placeholder="请输入验证码" size="large" class="flex-1 mr-5" />
-                  <div class="w-1/3 h-11 bg-[#c3d4f2] rounded">
-                    <img v-if="picPath" class="w-full h-full" :src="picPath" alt="请输入验证码" @click="loginVerify()">
-                  </div>
+                  
+                  <!-- 获取验证码按钮 -->
+                  <el-button class="w-2/5 h-11 rounded" type="primary" :disabled="time>0" @click="submitEmailCaptcha">{{ time>0?`(${time}s)后重新获取`:'获取验证码' }}</el-button>
                 </div>
               </el-form-item>
               <el-form-item class="mb-6">
+                <!-- 注册按钮 -->
                 <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
                   @click="submitReg">注&nbsp;册</el-button>
               </el-form-item>
               <el-form-item class="mb-6">
-                <el-button class="shadow shadow-blue-600 h-11 w-full" type="primary" size="large"
+                <el-button class="h-11 w-full" size="large"
                   @click="submitForm">有账号，去登录</el-button>
               </el-form-item>
             </el-form>
@@ -77,22 +85,27 @@ export default {
 </script>
 
 <script setup>
-import { captcha } from '@/api/user'
+import { sendEmailCaptcha } from '@/api/user'
 import BottomInfo from '@/view/layout/bottomInfo/bottomInfo.vue'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/pinia/modules/user'
 const router = useRouter()
+
 // 验证函数
 const checkUsername = (rule, value, callback) => {
-  if (value.length < 5) {
+  //用户名
+  const regName = /^[a-zA-Z0-9_-]{6,20}$/;
+  if (!regName.test(value)) {
     return callback(new Error('请输入正确的用户名'))
   } else {
     callback()
   }
 }
+
 const checkPassword = (rule, value, callback) => {
+  //密码规则匹配 密码只做长度校验 反正要hash
   if (value.length < 6) {
     return callback(new Error('请输入正确的密码'))
   } else {
@@ -100,41 +113,41 @@ const checkPassword = (rule, value, callback) => {
   }
 }
 
-// 获取验证码
-const loginVerify = () => {
-  captcha({}).then(async (ele) => {
-    rules.captcha.push({
-      max: ele.data.captchaLength,
-      min: ele.data.captchaLength,
-      message: `请输入${ele.data.captchaLength}位验证码`,
-      trigger: 'blur',
-    })
-    picPath.value = ele.data.picPath
-    loginFormData.captchaId = ele.data.captchaId
-    loginFormData.openCaptcha = ele.data.openCaptcha
-  })
+//校验邮箱格式 这里由于MC玩家 大多交流平台是qq群 所以这里限制QQ邮箱 也能在一定程度上防熊
+const checkEmail = (rule, value, callback) => {
+  const regEmail = /^[a-zA-Z0-9_-]{6,20}@qq\.com$/;
+  if (!regEmail.test(value)) {
+    return callback(new Error('请输入正确的QQ邮箱'))
+  } else {
+    callback()
+  }
 }
-loginVerify()
+//校验验证码 填写了验证码才能提交注册
+const checkEmailCaptcha = (rule, value, callback) => {
+  const regCaptcha = /^[0-9]{6}$/;
+  if (!regCaptcha.test(value)) {
+    return callback(new Error('验证码格式不正确'))
+  } else {
+    callback()
+  }
+}
 
 // 登录相关操作
 const loginForm = ref(null)
-const picPath = ref('')
+//定义 注册 表单结构体
 const loginFormData = reactive({
   username: '',
   password: '',
-  captcha: '',
+  email: '',//邮箱
+  captcha: '',//用户输入的验证码
   captchaId: '',
-  openCaptcha: false,
+  openCaptcha: true,//默认显示验证码
 })
 const rules = reactive({
   username: [{ validator: checkUsername, trigger: 'blur' }],
   password: [{ validator: checkPassword, trigger: 'blur' }],
-  captcha: [
-    {
-      message: '验证码格式不正确',
-      trigger: 'blur',
-    },
-  ],
+  email: [{ validator: checkEmail, trigger: 'blur' }],
+  captcha: [{ validator: checkEmailCaptcha, trigger: 'blur' }],
 })
 
 // 用户数据
@@ -150,24 +163,74 @@ const register = async () => {
   return await userStore.Register(loginFormData)
 }
 
+
 // 玩家注册提交
 const submitReg = () => {
   loginForm.value.validate(async (v) => {
     if (v) {
+      //注册请求
       const flag = await register()
-      if (!flag) {
-        loginVerify()
-      }
+      
     } else {
       ElMessage({
         type: 'error',
-        message: '请正确填写登录信息',
+        message: '请正确填写注册信息',
         showClose: true,
       })
-      loginVerify()
       return false
     }
   })
+}
+
+// 发送验证码
+const submitEmailCaptcha = () => {
+  loginForm.email.validate(async (v) => {
+    if (v) {
+
+      //数据校验通过 发送验证码
+      const flag = await sendEmail()
+      
+    } else {
+
+      //数据校验失败 提示
+
+      ElMessage({
+        type: 'error',
+        message: '请正确填写注册信息',
+        showClose: true,
+      })
+      return false
+    }
+  })
+}
+
+// 玩家发送邮箱验证码异步请求
+const sendEmail = async() => {
+  const res = await sendEmailCaptcha()
+  if (res.code === 0) {
+    ElMessage.success('发送成功,请查收')
+
+    //倒计时
+    getCode()
+
+  }else{
+    ElMessage.error('发送失败,请稍后重试')
+  }
+}
+
+//倒计时时间
+const time = ref(0)
+
+//验证码倒计时
+const getCode = async() => {
+  time.value = 60
+  let timer = setInterval(() => {
+    time.value--
+    if (time.value <= 0) {
+      clearInterval(timer)
+      timer = null
+    }
+  }, 1000)
 }
 
 </script>

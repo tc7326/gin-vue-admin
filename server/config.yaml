@@ -67,13 +67,13 @@ db-list:
       log-mode: ""
       log-zap: false
 email:
-    to: xxx@qq.com
+    to: ""
     port: 465
-    from: xxx@163.com
-    host: smtp.163.com
+    from: bigboy@redcraft.cn
+    host: smtp.qiye.aliyun.com
     is-ssl: true
-    secret: xxx
-    nickname: test
+    secret:
+    nickname: 红土大陆邮箱验证
 excel:
     dir: ./resource/excel/
 hua-wei-obs:
