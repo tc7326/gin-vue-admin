@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { useRouterStore } from './router'
 // 导入注册插件里的user.js
-import { userRegister } from '@/plugin/register/api/user'
+import { userEmailRegister } from '@/plugin/register/api/user'
 
 export const useUserStore = defineStore('user', () => {
   const loadingInstance = ref(null)
@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   /* 获取用户信息*/
-  const GetUserInfo = async() => {
+  const GetUserInfo = async () => {
     const res = await getUserInfo()
     if (res.code === 0) {
       setUserInfo(res.data.userInfo)
@@ -51,7 +51,7 @@ export const useUserStore = defineStore('user', () => {
     return res
   }
   /* 登录*/
-  const LoginIn = async(loginInfo) => {
+  const LoginIn = async (loginInfo) => {
     loadingInstance.value = ElLoading.service({
       fullscreen: true,
       text: '登录中，请稍候...',
@@ -90,7 +90,7 @@ export const useUserStore = defineStore('user', () => {
     loadingInstance.value.close()
   }
   /* 登出*/
-  const LoginOut = async() => {
+  const LoginOut = async () => {
     const res = await jsonInBlacklist()
     if (res.code === 0) {
       token.value = ''
@@ -101,13 +101,13 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   /* 清理数据 */
-  const ClearStorage = async() => {
+  const ClearStorage = async () => {
     token.value = ''
     sessionStorage.clear()
     localStorage.clear()
   }
   /* 设置侧边栏模式*/
-  const changeSideMode = async(data) => {
+  const changeSideMode = async (data) => {
     const res = await setSelfInfo({ sideMode: data })
     if (res.code === 0) {
       userInfo.value.sideMode = data
@@ -145,26 +145,26 @@ export const useUserStore = defineStore('user', () => {
     window.localStorage.setItem('token', token.value)
   })
 
-
-  // 玩家自己注册的fun
-  const Register = async(loginInfo) => {
+  // 玩家使用邮箱验证自己注册
+  const EmailRegister = async (loginInfo) => {
     loadingInstance.value = ElLoading.service({
       fullscreen: true,
       text: '注册中，请稍候...',
     })
     try {
-      const res = await userRegister(loginInfo)
+
+      //请求
+      const res = await userEmailRegister(loginInfo)
       //请求成功
       if (res.code === 0) {
-        setUserInfo(res.data.user)
-        setToken(res.data.token)
-        const routerStore = useRouterStore()
-        await routerStore.SetAsyncRouter()
-        const asyncRouters = routerStore.asyncRouters
-        asyncRouters.forEach((asyncRouter) => {
-          router.addRoute(asyncRouter)
-        })
-        router.push({ name: userInfo.value.authority.defaultRouter })
+        
+        //提示注册成功
+        ElMessage.success('注册成功 请登录')
+
+        //注册成功 路由到登录页面
+        router.push({ name: 'Login', replace: true })
+        loadingInstance.value.close()
+
         return true
       }
     } catch (e) {
@@ -190,6 +190,6 @@ export const useUserStore = defineStore('user', () => {
     activeColor,
     loadingInstance,
     ClearStorage,
-    Register
+    EmailRegister
   }
 })

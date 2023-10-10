@@ -83,7 +83,9 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 	if err = db.Model(&entities[0]).Association("Authorities").Replace(authorityEntities); err != nil {
 		return next, err
 	}
-	authorityEntities1 := authorityEntities[1:2] //这里截取的是下标为1(下标1开始不包含2)的角色 也就是普通玩家
+
+	//这里截取的是下标为1(下标1开始不包含2)的角色 也就是普通玩家
+	authorityEntities1 := authorityEntities[1:2]
 	if err = db.Model(&entities[1]).Association("Authorities").Replace(authorityEntities1); err != nil {
 		return next, err
 	}

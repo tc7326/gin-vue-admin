@@ -11,7 +11,7 @@ export const login = (data) => {
   })
 }
 
-// @Summary 获取验证码
+// @Summary 获取图片验证码
 // @Produce  application/json
 // @Param data body {username:"string",password:"string"}
 // @Router /base/captcha [post]
@@ -20,20 +20,6 @@ export const captcha = (data) => {
     url: '/base/captcha',
     method: 'post',
     data: data
-  })
-}
-
-// @Tags itloser.top
-// @Summary 用户注册 发送邮件验证码
-// @Produce  application/json
-// @Param data body email_response.Email true "发送邮件必须的参数"
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"发送成功"}"
-// @Router /base/captcha-e [post]
-export const sendEmailCaptcha = (data) => {
-  return service({
-    url: '/base/captcha-e',
-    method: 'post',
-    data
   })
 }
 
@@ -175,6 +161,25 @@ export const getUserInfo = () => {
 export const resetPassword = (data) => {
   return service({
     url: '/user/resetPassword',
+    method: 'post',
+    data: data
+  })
+}
+
+
+//以上为 框架 原始接口
+//以下为 itloser.top 新加的接口
+
+
+// @Tags itloser.top
+// @Summary 用户注册 发送邮件验证码
+// @Produce  application/json
+// @Param data body email_response.Email true "发送邮件必须的参数"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"发送成功"}"
+// @Router /base/captcha-e [post]
+export const sendEmailCaptcha = (data) => {
+  return service({
+    url: '/base/captcha-e',
     method: 'post',
     data: data
   })

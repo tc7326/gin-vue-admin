@@ -16,4 +16,12 @@ var (
 	OldAuthorityVerify     = Rules{"OldAuthorityId": {NotEmpty()}}
 	ChangePasswordVerify   = Rules{"Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
+
+	//EmailRegisterVerify 用户验证码注册 参数校验
+	EmailRegisterVerify = Rules{
+		"Username": {NotEmpty(), RegexpMatch("^[a-zA-Z0-9_-]{3,16}$")},
+		"Email":    {NotEmpty(), RegexpMatch("^[a-zA-Z0-9_-]{6,20}@qq\\.com$")},
+		"Password": {NotEmpty()},
+		"Captcha":  {NotEmpty()},
+	}
 )

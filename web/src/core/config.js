@@ -4,7 +4,7 @@
 
 const config = {
   appName: '红土大陆',
-  appLogo: '/src/assets/Red_Wool_JE3_BE3.png',
+  appLogo: '/src/assets/Red_Concrete_JE1_BE1.webp',
   showViteLogo: true
 }
 

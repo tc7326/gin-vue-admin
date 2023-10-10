@@ -1,6 +1,7 @@
 package system
 
 import (
+	"log"
 	"strconv"
 	"time"
 
@@ -49,6 +50,7 @@ func (b *BaseApi) Login(c *gin.Context) {
 
 	var oc bool = openCaptcha == 0 || openCaptcha < interfaceToInt(v)
 
+	//这里应该是校验
 	if !oc || store.Verify(l.CaptchaId, l.Captcha, true) {
 		u := &system.SysUser{Username: l.Username, Password: l.Password}
 		user, err := userService.Login(u)
@@ -132,7 +134,7 @@ func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 	}
 }
 
-// Register
+// Register 超管给用户注册
 // @Tags     SysUser
 // @Summary  用户注册账号
 // @Produce   application/json
@@ -235,7 +237,7 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 
 // SetUserAuthority
 // @Tags      SysUser
-// @Summary   更改用户权限
+// @Summary   更改用户权限 切换当前用户的 权限组 比如超管切换到普通玩家
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
@@ -254,6 +256,7 @@ func (b *BaseApi) SetUserAuthority(c *gin.Context) {
 		return
 	}
 	userID := utils.GetUserID(c)
+	log.Printf("修改权限传递的值: %v %v", userID, sua.AuthorityId)
 	err = userService.SetUserAuthority(userID, sua.AuthorityId)
 	if err != nil {
 		global.GVA_LOG.Error("修改失败!", zap.Error(err))

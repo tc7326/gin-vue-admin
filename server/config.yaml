@@ -72,8 +72,8 @@ email:
     from: bigboy@redcraft.cn
     host: smtp.qiye.aliyun.com
     is-ssl: true
-    secret:
-    nickname: 红土大陆邮箱验证
+    secret: PehtMW5xJEZ7O8Tp
+    nickname: 红土大陆
 excel:
     dir: ./resource/excel/
 hua-wei-obs:
@@ -83,7 +83,7 @@ hua-wei-obs:
     access-key: you-access-key
     secret-key: you-secret-key
 jwt:
-    signing-key: 53de4ba8-9fab-40c4-b776-1cc775a0a2d9
+    signing-key: 994f0fbe-0c54-46d4-b835-825901147f68
     expires-time: 7d
     buffer-time: 1d
     issuer: qmPlus
@@ -202,7 +202,7 @@ timer:
           interval: 168h
 zap:
     level: info
-    prefix: '[github.com/flipped-aurora/gin-vue-admin/server]'
+    prefix: '[zap]'
     format: console
     director: log
     encode-level: LowercaseColorLevelEncoder

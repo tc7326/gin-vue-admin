@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/gofrs/uuid/v5"
+	"gorm.io/gorm"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
@@ -16,6 +17,7 @@ import (
 
 type RegisterService struct{}
 
+// PlugService 插件自带的用户注册的案例 会直接注册成功
 func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, err error) {
 
 	//空值校验
@@ -73,4 +75,16 @@ func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, e
 	return res, nil
 	// 前面的代码 拿不到正确的 user，所以需要再次查询一次
 
+}
+
+func (r *RegisterService) Register(u system.SysUser) (userInter system.SysUser, err error) {
+	var user system.SysUser
+	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+		return userInter, errors.New("用户名已注册")
+	}
+	// 否则 附加uuid 密码hash加密 注册
+	u.Password = utils.BcryptHash(u.Password)
+	u.UUID = uuid.Must(uuid.NewV4())
+	err = global.GVA_DB.Create(&u).Error
+	return u, err
 }

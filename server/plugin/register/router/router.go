@@ -12,7 +12,10 @@ func (s *RegisterRouter) InitRegisterRouter(Router *gin.RouterGroup) {
 	plugRouter := Router
 	plugApi := api.ApiGroupApp.RegisterApi
 	{
-		//接口注册
+		//插件案例的 直接注册的接口
 		plugRouter.POST("register", plugApi.ApiName)
+
+		//用户通过邮箱验证自己注册的注册接口
+		plugRouter.POST("user", plugApi.UserRegister)
 	}
 }

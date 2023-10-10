@@ -102,10 +102,12 @@ func (userService *UserService) GetUserInfoList(info request.PageInfo) (list int
 //@return: err error
 
 func (userService *UserService) SetUserAuthority(id uint, authorityId uint) (err error) {
+	//校验该用户 有没有该权限组
 	assignErr := global.GVA_DB.Where("sys_user_id = ? AND sys_authority_authority_id = ?", id, authorityId).First(&system.SysUserAuthority{}).Error
 	if errors.Is(assignErr, gorm.ErrRecordNotFound) {
 		return errors.New("该用户无此角色")
 	}
+	//切换 用户权限组
 	err = global.GVA_DB.Where("id = ?", id).First(&system.SysUser{}).Update("authority_id", authorityId).Error
 	return err
 }

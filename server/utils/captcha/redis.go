@@ -11,7 +11,7 @@ import (
 
 func NewDefaultRedisStore() *RedisStore {
 	return &RedisStore{
-		Expiration: time.Second * 180,
+		Expiration: time.Second * 300,
 		PreKey:     "CAPTCHA_",
 	}
 }
@@ -51,8 +51,16 @@ func (rs *RedisStore) Get(key string, clear bool) string {
 	return val
 }
 
+// Verify 这是校验 用户输入的验证码 和 缓存的比较
 func (rs *RedisStore) Verify(id, answer string, clear bool) bool {
 	key := rs.PreKey + id
 	v := rs.Get(key, clear)
 	return v == answer
+}
+
+// VerifyGet 从缓存获取 生成的验证码
+func (rs *RedisStore) VerifyGet(id string) string {
+	key := rs.PreKey + id
+	v := rs.Get(key, false)
+	return v
 }
