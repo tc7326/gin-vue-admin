@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="hidden md:block w-1/2 float-right text-center">
-        <img class="h-full w-1/2" src="@/assets/ic_piglin_loading.gif" alt="banner">
+        <img class="h-full w-1/4" src="@/assets/ic_piglin_loading.gif" alt="banner">
       </div>
     </div>
 

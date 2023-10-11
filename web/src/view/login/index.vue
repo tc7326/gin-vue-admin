@@ -53,7 +53,7 @@
       </div>
       <div class="hidden md:block w-1/2 float-right text-center">
         
-        <img class="h-full w-1/2" src="@/assets/Allay_Dancing.webp" alt="banner">
+        <img class="h-full w-1/4" src="@/assets/Allay_Dancing.webp" alt="banner">
       </div>
     </div>
 
