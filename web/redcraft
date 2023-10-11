@@ -1,5 +1,5 @@
 server {
-    listen 25564;
+    listen 80;
     server_name redcraft.cn www.redcraft.cn;
     return 301 https://$host$request_uri;
 }
