@@ -1,11 +1,11 @@
 server {
-    listen 80;
+    listen 25564;
     server_name redcraft.cn www.redcraft.cn;
     return 301 https://$host$request_uri;
 }
 
 server {
-    listen 443 ssl;
+    listen 25564 ssl;
     server_name redcraft.cn www.redcraft.cn;
 
     ssl_certificate /home/ubuntu/redmc/ssl/redcraft.cn.pem;
@@ -21,8 +21,8 @@ server {
         proxy_pass http://localhost:8888; # 后端应用监听的端口
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     	rewrite ^/api/(.*)$ /$1 break;  #重写
     }
 }
