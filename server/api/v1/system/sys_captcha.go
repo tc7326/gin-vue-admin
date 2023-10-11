@@ -138,7 +138,7 @@ func (b *BaseApi) CaptchaEmail(c *gin.Context) {
 
 	//替换内容
 	html := strings.Replace(string(tempBytes), "123456", captchaCode, 1)
-	log.Println("替换后的html", html)
+	//log.Println("替换后的html", html)
 
 	//这里直接套用 下发邮件的结构体
 	var email email_response.Email
