@@ -94,8 +94,9 @@ import { useUserStore } from '@/pinia/modules/user'
 const router = useRouter()
 // 验证函数
 const checkUsername = (rule, value, callback) => {
-  if (value.length < 5) {
-    return callback(new Error('请输入用户名或邮箱'))
+  const regName = /^[a-zA-Z0-9_-]{3,16}$/;
+  if (!regName.test(value)) {
+    return callback(new Error('用户名仅能包含字母、数字和下划线'))
   } else {
     callback()
   }
