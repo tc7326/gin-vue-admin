@@ -67,10 +67,10 @@ func (e *RegisterService) PlugService(req model.Request) (res *system.SysUser, e
 	}
 
 	if rest, err := us.Register(*u); err != nil {
-		return &rest, errors.New("注册失败!")
+		return &rest, errors.New("注册失败")
 	}
 	if res, err = us.Login(u); err != nil {
-		return res, errors.New("登陆失败!")
+		return res, errors.New("登陆失败")
 	}
 	return res, nil
 	// 前面的代码 拿不到正确的 user，所以需要再次查询一次
