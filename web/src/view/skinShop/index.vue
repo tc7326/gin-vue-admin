@@ -1,230 +1,383 @@
 <template>
-    <div class="page">
-      <div class="gva-card-box">
-        <div class="gva-card gva-top-card">
-          <div class="gva-top-card-left">
-            <div class="gva-top-card-left-title">你好，冒险者！</div>
-            <div class="gva-top-card-left-dot">{{ weatherInfo }}</div>
-              <el-row class="my-8 w-[500px]">
-                <el-col :span="8" :xs="24" :sm="8">
-                  <div class="flex items-center">
-                    <el-icon class="dashboard-icon">
-                      <sort />
-                    </el-icon>
-                    当前在线 (123)
-                  </div>
-                </el-col>
-                <el-col :span="8" :xs="24" :sm="8">
-                  <div class="flex items-center">
-                    <el-icon class="dashboard-icon">
-                      <avatar />
-                    </el-icon>
-                    OP在线 (1)
-                  </div>
-                </el-col>
-                <el-col :span="8" :xs="24" :sm="8">
-                  <div class="flex items-center">
-                    <el-icon class="dashboard-icon">
-                      <comment />
-                    </el-icon>
-                    玩家总数 (114514)
-                  </div>
-                </el-col>
-              </el-row>
-            <div>
-              <div class="gva-top-card-left-item">
-                宣传视频：
-                <a
-                  style="color:#409EFF"
-                  target="view_window"
-                  href="https://www.bilibili.com/video/BV16U4y1L7GR/"
-                >https://www.bilibili.com/video/BV16U4y1L7GR/</a>
-              </div>
-              <div class="gva-top-card-left-item">
-                玩家视频：
-                <a
-                  style="color:#409EFF"
-                  target="view_window"
-                  href="https://www.bilibili.com/video/BV1JL411E7Kc/"
-                >https://www.bilibili.com/video/BV1JL411E7Kc/</a>
-              </div>
+  <div>
+    <div class="grid grid-cols-12 w-full gap-2">
+      <div class="col-span-3 h-full">
+        <div class="w-full h-full bg-white px-4 py-8 rounded-lg shadow-lg box-border">
+          <div class="user-card px-6 text-center bg-white shrink-0">
+            <div class="flex justify-center">
+              <SelectImage v-model="userStore.userInfo.headerImg" />
             </div>
+            <div class="py-6 text-center">
+              <p v-if="!editFlag" class="text-3xl flex justify-center items-center gap-4">
+                {{ userStore.userInfo.userName }}
+                <!-- <el-icon class="cursor-pointer text-sm" color="#66b1ff" @click="openEdit">
+                  <edit />
+                </el-icon> -->
+              </p>
+              <p v-if="editFlag" class="flex justify-center items-center gap-4">
+                <el-input v-model="nickName" />
+                <el-icon class="cursor-pointer" color="#67c23a" @click="enterEdit">
+                  <check />
+                </el-icon>
+                <el-icon class="cursor-pointer" color="#f23c3c" @click="closeEdit">
+                  <close />
+                </el-icon>
+              </p>
+            </div>
+            <div class="w-full h-full text-left"></div>
           </div>
-          <img src="@/assets/Nitwit_refusing.webp" class="h-full center" alt="creeper">
         </div>
       </div>
-      <div class="gva-card-box">
-        <div class="gva-card quick-entrance">
-          <div class="gva-card-title">快捷入口</div>
-          <el-row :gutter="20">
-            <el-col
-              v-for="(card, key) in toolCards"
-              :key="key"
-              :span="4"
-              :xs="8"
-              class="quick-entrance-items"
-              @click="toTarget(card.name)"
-            >
-              <div class="quick-entrance-item">
-                <div class="quick-entrance-item-icon" :style="{ backgroundColor: card.bg }">
-                  <el-icon>
-                    <component :is="card.icon" :style="{ color: card.color }" />
-                  </el-icon>
-                </div>
-                <p>{{ card.label }}</p>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-      <div class="gva-card-box">
-        <div class="gva-card">
-           <div class="gva-card-title">数据统计</div>
-          <div class="p-4">
-            <el-row :gutter="20">
-              <el-col :xs="24" :sm="18">
-                <echarts-line />
-              </el-col>
-              <el-col :xs="24" :sm="6">
-                <dashboard-table />
-              </el-col>
-            </el-row>
-          </div>
+      <div class="col-span-9">
+        <div class="bg-white h-full px-4 py-8 rounded-lg shadow-lg box-border">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="账户安全信息" name="second">
+              <ul>
+                <li class="borderd">
+                  <p class="pb-2.5 text-xl text-gray-600">游戏内白名单</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    {{
+                      userStore.userInfo.nickName != ""
+                        ? userStore.userInfo.nickName
+                        : "未设置"
+                    }}
+                    <a
+                      href="javascript:void(0)"
+                      @click="changePhoneFlag = true"
+                      class="float-right text-blue-400"
+                      >{{ userStore.userInfo.nickName != "" ? "更改白名单" : "设置白名单" }}</a
+                    >
+                  </p>
+                </li>
+                <li class="borderd pt-2.5">
+                  <p class="pb-2.5 text-xl text-gray-600">安全手机</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    {{
+                      userStore.userInfo.phone != "" ? userStore.userInfo.phone : "未绑定"
+                    }}
+                    <a
+                      href="javascript:void(0)"
+                      @click="changePhoneFlag = true"
+                      class="float-right text-blue-400"
+                      >{{ userStore.userInfo.phone != "" ? "更换手机" : "绑定手机" }}</a
+                    >
+                  </p>
+                </li>
+                <li class="borderd pt-2.5">
+                  <p class="pb-2.5 text-xl text-gray-600">安全邮箱</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    {{
+                      userStore.userInfo.email != "" ? userStore.userInfo.email : "未绑定"
+                    }}
+                    <a
+                      href="javascript:void(0)"
+                      @click="changeEmailFlag = true"
+                      class="float-right text-blue-400"
+                      >{{ userStore.userInfo.email != "" ? "更换邮箱" : "绑定邮箱" }}</a
+                    >
+                  </p>
+                </li>
+                <li class="borderd pt-2.5">
+                  <p class="pb-2.5 text-xl text-gray-600">账户密码</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    已设定密码
+                    <a
+                      href="javascript:void(0)"
+                      @click="showPassword = true"
+                      class="float-right text-blue-400"
+                      >修改密码</a
+                    >
+                  </p>
+                </li>
+              </ul>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import EchartsLine from '@/view/dashboard/dashboardCharts/echartsLine.vue'
-  import DashboardTable from '@/view/dashboard/dashboardTable/dashboardTable.vue'
-  import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useWeatherInfo } from '@/view/dashboard/weather.js'
-  
-  const weatherInfo = useWeatherInfo()
-  
-  const toolCards = ref([
+
+    <el-dialog
+      v-model="showPassword"
+      title="修改密码"
+      width="360px"
+      @close="clearPassword"
+    >
+      <el-form ref="modifyPwdForm" :model="pwdModify" :rules="rules" label-width="80px">
+        <el-form-item :minlength="6" label="原密码" prop="password">
+          <el-input v-model="pwdModify.password" show-password />
+        </el-form-item>
+        <el-form-item :minlength="6" label="新密码" prop="newPassword">
+          <el-input v-model="pwdModify.newPassword" show-password />
+        </el-form-item>
+        <el-form-item :minlength="6" label="确认密码" prop="confirmPassword">
+          <el-input v-model="pwdModify.confirmPassword" show-password />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="showPassword = false">取 消</el-button>
+          <el-button type="primary" @click="savePassword">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="changePhoneFlag" title="绑定手机" width="600px">
+      <el-form :model="phoneForm">
+        <el-form-item label="手机号" label-width="120px">
+          <el-input
+            v-model="phoneForm.phone"
+            placeholder="请输入手机号"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item label="验证码" label-width="120px">
+          <div class="flex w-full gap-4">
+            <el-input
+              class="flex-1"
+              v-model="phoneForm.code"
+              autocomplete="off"
+              placeholder="请自行设计短信服务，此处为模拟随便写"
+              style="width: 300px"
+            />
+            <el-button type="primary" :disabled="time > 0" @click="getCode">{{
+              time > 0 ? `(${time}s)后重新获取` : "获取验证码"
+            }}</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeChangePhone">取消</el-button>
+          <el-button type="primary" @click="changePhone">更改</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="changeEmailFlag" title="绑定邮箱" width="600px">
+      <el-form :model="emailForm">
+        <el-form-item label="邮箱" label-width="120px">
+          <el-input
+            v-model="emailForm.email"
+            placeholder="请输入邮箱"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item label="验证码" label-width="120px">
+          <div class="flex w-full gap-4">
+            <el-input
+              class="flex-1"
+              v-model="emailForm.code"
+              placeholder="请自行设计邮件服务，此处为模拟随便写"
+              autocomplete="off"
+              style="width: 300px"
+            />
+            <el-button type="primary" :disabled="emailTime > 0" @click="getEmailCode">{{
+              emailTime > 0 ? `(${emailTime}s)后重新获取` : "获取验证码"
+            }}</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeChangeEmail">取消</el-button>
+          <el-button type="primary" @click="changeEmail">更改</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Person",
+};
+</script>
+
+<script setup>
+import { setSelfInfo, changePassword } from "@/api/user.js";
+import { reactive, ref, watch } from "vue";
+import { ElMessage } from "element-plus";
+import { useUserStore } from "@/pinia/modules/user";
+import SelectImage from "@/components/selectImage/selectImage.vue";
+
+const activeName = ref("second");
+const rules = reactive({
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, message: "最少6个字符", trigger: "blur" },
+  ],
+  newPassword: [
+    { required: true, message: "请输入新密码", trigger: "blur" },
+    { min: 6, message: "最少6个字符", trigger: "blur" },
+  ],
+  confirmPassword: [
+    { required: true, message: "请输入确认密码", trigger: "blur" },
+    { min: 6, message: "最少6个字符", trigger: "blur" },
     {
-      label: '用户管理',
-      icon: 'monitor',
-      name: 'user',
-      color: '#ff9c6e',
-      bg: 'rgba(255, 156, 110,.3)'
+      validator: (rule, value, callback) => {
+        if (value !== pwdModify.value.newPassword) {
+          callback(new Error("两次密码不一致"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "blur",
     },
-    {
-      label: '角色管理',
-      icon: 'setting',
-      name: 'authority',
-      color: '#69c0ff',
-      bg: 'rgba(105, 192, 255,.3)'
-    },
-    {
-      label: '菜单管理',
-      icon: 'menu',
-      name: 'menu',
-      color: '#b37feb',
-      bg: 'rgba(179, 127, 235,.3)'
-    },
-    {
-      label: '代码生成器',
-      icon: 'cpu',
-      name: 'autoCode',
-      color: '#ffd666',
-      bg: 'rgba(255, 214, 102,.3)'
-    },
-    {
-      label: '表单生成器',
-      icon: 'document-checked',
-      name: 'formCreate',
-      color: '#ff85c0',
-      bg: 'rgba(255, 133, 192,.3)'
-    },
-    {
-      label: '关于我们',
-      icon: 'user',
-      name: 'about',
-      color: '#5cdbd3',
-      bg: 'rgba(92, 219, 211,.3)'
+  ],
+});
+
+const userStore = useUserStore();
+const modifyPwdForm = ref(null);
+const showPassword = ref(false);
+const pwdModify = ref({});
+const nickName = ref("");
+const editFlag = ref(false);
+const savePassword = async () => {
+  modifyPwdForm.value.validate((valid) => {
+    if (valid) {
+      changePassword({
+        password: pwdModify.value.password,
+        newPassword: pwdModify.value.newPassword,
+      }).then((res) => {
+        if (res.code === 0) {
+          ElMessage.success("修改密码成功！");
+        }
+        showPassword.value = false;
+      });
+    } else {
+      return false;
     }
-  ])
-  
-  const router = useRouter()
-  
-  const toTarget = (name) => {
-    router.push({ name })
+  });
+};
+
+const clearPassword = () => {
+  pwdModify.value = {
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  };
+  modifyPwdForm.value.clearValidate();
+};
+
+watch(
+  () => userStore.userInfo.headerImg,
+  async (val) => {
+    const res = await setSelfInfo({ headerImg: val });
+    if (res.code === 0) {
+      userStore.ResetUserInfo({ headerImg: val });
+      ElMessage({
+        type: "success",
+        message: "设置成功",
+      });
+    }
   }
-  
-  </script>
-  <script>
-  export default {
-    name: 'Dashboard'
+);
+
+const openEdit = () => {
+  nickName.value = userStore.userInfo.nickName;
+  editFlag.value = true;
+};
+
+const closeEdit = () => {
+  nickName.value = "";
+  editFlag.value = false;
+};
+
+const enterEdit = async () => {
+  const res = await setSelfInfo({
+    nickName: nickName.value,
+  });
+  if (res.code === 0) {
+    userStore.ResetUserInfo({ nickName: nickName.value });
+    ElMessage({
+      type: "success",
+      message: "设置成功",
+    });
   }
-  </script>
-  
-  <style lang="scss" scoped>
-  .page {
-      @apply p-0;
-      .gva-card-box{
-        @apply p-4;
-        &+.gva-card-box{
-          @apply pt-0;
-        }
-      }
-      .gva-card {
-        @apply box-border bg-white rounded h-auto px-6 py-8 overflow-hidden shadow-sm;
-        .gva-card-title{
-          @apply pb-5 border-t-0 border-l-0 border-r-0 border-b border-solid border-gray-100;
-        }
-      }
-      .gva-top-card {
-          @apply h-72 flex items-center justify-between text-gray-500;
-          &-left {
-            @apply h-full flex flex-col w-auto;
-              &-title {
-                @apply text-3xl text-gray-600;
-              }
-              &-dot {
-                @apply mt-4 text-gray-600 text-lg;
-              }
-              &-item{
-                +.gva-top-card-left-item{
-                  margin-top: 24px;
-                }
-                margin-top: 14px;
-              }
-          }
-          &-right {
-              height: 600px;
-              width: 600px;
-              margin-top: 28px;
-          }
-      }
-       ::v-deep(.el-card__header){
-            @apply p-0  border-gray-200;
-          }
-          .card-header{
-            @apply pb-5 border-b border-solid border-gray-200 border-t-0 border-l-0 border-r-0;
-          }
-      .quick-entrance-items {
-        @apply flex items-center justify-center text-center text-gray-800;
-          .quick-entrance-item {
-            @apply px-8 py-6 flex items-center flex-col transition-all duration-100 ease-in-out rounded-lg cursor-pointer;
-            &:hover{
-              @apply shadow-lg;
-            }
-              &-icon {
-                @apply flex items-center h-16 w-16 rounded-lg justify-center mx-0 my-auto text-2xl;
-              }
-              p {
-                  @apply mt-2.5;
-              }
-          }
-      }
+  nickName.value = "";
+  editFlag.value = false;
+};
+
+const handleClick = (tab, event) => {
+  console.log(tab, event);
+};
+
+const changePhoneFlag = ref(false);
+const time = ref(0);
+const phoneForm = reactive({
+  phone: "",
+  code: "",
+});
+
+const getCode = async () => {
+  time.value = 60;
+  let timer = setInterval(() => {
+    time.value--;
+    if (time.value <= 0) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }, 1000);
+};
+
+const closeChangePhone = () => {
+  changePhoneFlag.value = false;
+  phoneForm.phone = "";
+  phoneForm.code = "";
+};
+
+const changePhone = async () => {
+  const res = await setSelfInfo({ phone: phoneForm.phone });
+  if (res.code === 0) {
+    ElMessage.success("修改成功");
+    userStore.ResetUserInfo({ phone: phoneForm.phone });
+    closeChangePhone();
   }
-  .dashboard-icon {
-    @apply flex items-center text-xl mr-2 text-blue-400;
+};
+
+const changeEmailFlag = ref(false);
+const emailTime = ref(0);
+const emailForm = reactive({
+  email: "",
+  code: "",
+});
+
+const getEmailCode = async () => {
+  emailTime.value = 60;
+  let timer = setInterval(() => {
+    emailTime.value--;
+    if (emailTime.value <= 0) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }, 1000);
+};
+
+const closeChangeEmail = () => {
+  changeEmailFlag.value = false;
+  emailForm.email = "";
+  emailForm.code = "";
+};
+
+const changeEmail = async () => {
+  const res = await setSelfInfo({ email: emailForm.email });
+  if (res.code === 0) {
+    ElMessage.success("修改成功");
+    userStore.ResetUserInfo({ email: emailForm.email });
+    closeChangeEmail();
   }
-  
-  </style>
-  
+};
+</script>
+
+<style lang="scss">
+.borderd {
+  @apply border-b-2 border-solid border-gray-100 border-t-0 border-r-0 border-l-0;
+  &:last-child {
+    @apply border-b-0;
+  }
+}
+
+.info-list {
+  @apply w-full whitespace-nowrap overflow-hidden text-ellipsis py-3 text-lg text-gray-700;
+}
+</style>

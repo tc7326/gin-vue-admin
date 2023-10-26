@@ -66,7 +66,7 @@ func (p *RegisterApi) UserRegister(c *gin.Context) {
 
 	//redis使用ctx
 	store.UseWithCtx(c)
-	//获取缓存
+	//获取缓存的验证码
 	captchaCode := store.VerifyGet(req.CaptchaId)
 	log.Printf("缓存读取到的验证码是: %v", captchaCode)
 	if captchaCode == "" {
@@ -77,10 +77,24 @@ func (p *RegisterApi) UserRegister(c *gin.Context) {
 		response.FailWithMessage("验证码错误 请重试", c)
 		return
 	}
+	//获取缓存的用户名
+	capUsername := store.CapInfoGet(req.CaptchaId)
+	log.Printf("缓存读取到的验证码对应的用户名是: %v", capUsername)
+	if capUsername == "" {
+		response.FailWithMessage("验证码已过期 请重新获取!", c)
+		return
+	}
+	if req.Username != capUsername {
+		response.FailWithMessage("验证码错误 请重试!", c)
+		return
+	}
 
 	//设置关联权限组 这里只有1 普通用户
 	authorities := make([]system.SysAuthority, 1)
 	authorities[0] = system.SysAuthority{AuthorityId: 1}
+
+	//默认头像
+	steve := "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=0039b765d2160924dc70aa1de43719c2/bd315c6034a85edf3b752e104b540923dd54750c.jpg"
 
 	//组装业务数据
 	user := &system.SysUser{
@@ -89,6 +103,7 @@ func (p *RegisterApi) UserRegister(c *gin.Context) {
 		Password:    req.Password,
 		AuthorityId: 1,           //用户当前的用户组
 		Authorities: authorities, //用户所有的用户组
+		HeaderImg:   steve,       //用户头像 默认史蒂夫
 		Email:       req.Email,
 	}
 

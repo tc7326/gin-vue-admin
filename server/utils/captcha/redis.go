@@ -35,6 +35,14 @@ func (rs *RedisStore) Set(id string, value string) error {
 	return nil
 }
 
+func (rs *RedisStore) SetCapInfo(id string, value string) error {
+	err := global.GVA_REDIS.Set(rs.Context, "CAPINFO_"+id, value, rs.Expiration).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (rs *RedisStore) Get(key string, clear bool) string {
 	val, err := global.GVA_REDIS.Get(rs.Context, key).Result()
 	if err != nil {
@@ -61,6 +69,13 @@ func (rs *RedisStore) Verify(id, answer string, clear bool) bool {
 // VerifyGet 从缓存获取 生成的验证码
 func (rs *RedisStore) VerifyGet(id string) string {
 	key := rs.PreKey + id
+	v := rs.Get(key, false)
+	return v
+}
+
+// CapInfoGet 从缓存获取 生成的验证码对应的用户名
+func (rs *RedisStore) CapInfoGet(id string) string {
+	key := "CAPINFO_" + id
 	v := rs.Get(key, false)
 	return v
 }

@@ -113,6 +113,7 @@ func (b *BaseApi) CaptchaEmail(c *gin.Context) {
 	// 这里应该是生成了验证码的图的base64
 	cp := base64Captcha.NewCaptcha(driver, store.UseWithCtx(c)) // v8下使用redis
 	//cp := base64Captcha.NewCaptcha(driver, store)
+	// 这里写入缓存 这里库自己实现了缓存写入 我没法改逻辑
 	id, b64s, err := cp.Generate()
 	if err != nil {
 		global.GVA_LOG.Error("验证码获取失败!", zap.Error(err))
@@ -125,6 +126,14 @@ func (b *BaseApi) CaptchaEmail(c *gin.Context) {
 	captchaCode := store.VerifyGet(id)
 
 	log.Println("邮箱验证码是: ", captchaCode)
+
+	//由于这里库自己实现了缓存写入 我没法改逻辑 所以这里加一个用户名的缓存写入 避免注册时 修改用户名也能注册成功
+	err2 := store.SetCapInfo(id, l.Username)
+	if err2 != nil {
+		global.GVA_LOG.Error("验证码获取失败!", zap.Error(err))
+		response.FailWithMessage("验证码获取失败", c)
+		return
+	}
 
 	//这里加下发邮件的逻辑
 

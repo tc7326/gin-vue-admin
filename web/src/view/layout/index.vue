@@ -14,11 +14,7 @@
           class="min-h-[60px] text-center transition-all duration-300 flex items-center justify-center gap-2"
           :style="{ background: backgroundColor }"
         >
-          <img
-            alt
-            class="w-9 h-9 p-1"
-            :src="$GIN_VUE_ADMIN.appLogo"
-          />
+          <img alt class="w-9 h-9 p-1" :src="$GIN_VUE_ADMIN.appLogo" />
           <div
             v-if="isSider"
             class="inline-flex text-center font-bold text-2xl"
@@ -94,9 +90,11 @@
                         <el-dropdown>
                           <div class="flex justify-center items-center h-full w-full">
                             <span class="cursor-pointer flex justify-center items-center">
+                              <!-- 头像 -->
                               <CustomPic />
+                              <!-- 用户名 -->
                               <span v-show="!isMobile" style="margin-left: 5px">{{
-                                userStore.userInfo.nickName
+                                userStore.userInfo.userName
                               }}</span>
                               <el-icon>
                                 <arrow-down />

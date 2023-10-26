@@ -209,6 +209,7 @@ const getImageList = async() => {
 
 .multiple-img{
   display: flex;
+  justify-content: center;
   gap:8px;
 }
 
@@ -231,7 +232,7 @@ const getImageList = async() => {
   line-height: 120px;
   display: flex;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px dashed #ccc;
    background-repeat: no-repeat;
    background-size: cover;

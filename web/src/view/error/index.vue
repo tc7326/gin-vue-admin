@@ -25,6 +25,6 @@ import {useRouter} from "vue-router";
 const userStore = useUserStore()
 const router = useRouter()
 const toDashboard = () =>{
-  router.push({name:userStore.userInfo.authority.defaultRouter})
+  router.push({ name: 'Login', replace: true })
 }
 </script>
