@@ -33,9 +33,8 @@
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="账户安全信息" name="second">
               <ul>
-                <!-- 白名单 -->
                 <li class="borderd">
-                  <p class="pb-2.5 text-xl text-gray-600">白名单</p>
+                  <p class="pb-2.5 text-xl text-gray-600">游戏内白名单</p>
                   <p class="pb-2.5 text-lg text-gray-400">
                     {{
                       userStore.userInfo.nickName != ""
@@ -44,17 +43,13 @@
                     }}
                     <a
                       href="javascript:void(0)"
-                      @click="changeWhiteFlag = true"
+                      @click="changePhoneFlag = true"
                       class="float-right text-blue-400"
-                      >{{
-                        userStore.userInfo.nickName != "" ? "设置白名单" : "申请白名单"
-                      }}</a
+                      >{{ userStore.userInfo.nickName != "" ? "更改白名单" : "设置白名单" }}</a
                     >
                   </p>
                 </li>
-
-                <!-- 手机 -->
-                <!-- <li class="borderd pt-2.5">
+                <li class="borderd pt-2.5">
                   <p class="pb-2.5 text-xl text-gray-600">安全手机</p>
                   <p class="pb-2.5 text-lg text-gray-400">
                     {{
@@ -67,9 +62,7 @@
                       >{{ userStore.userInfo.phone != "" ? "更换手机" : "绑定手机" }}</a
                     >
                   </p>
-                </li> -->
-
-                <!-- 邮箱 -->
+                </li>
                 <li class="borderd pt-2.5">
                   <p class="pb-2.5 text-xl text-gray-600">安全邮箱</p>
                   <p class="pb-2.5 text-lg text-gray-400">
@@ -84,8 +77,6 @@
                     >
                   </p>
                 </li>
-
-                <!-- 密码 -->
                 <li class="borderd pt-2.5">
                   <p class="pb-2.5 text-xl text-gray-600">账户密码</p>
                   <p class="pb-2.5 text-lg text-gray-400">
@@ -105,11 +96,10 @@
       </div>
     </div>
 
-    <!-- 改密码的弹窗 -->
     <el-dialog
       v-model="showPassword"
       title="修改密码"
-      width="400px"
+      width="360px"
       @close="clearPassword"
     >
       <el-form ref="modifyPwdForm" :model="pwdModify" :rules="rules" label-width="80px">
@@ -125,29 +115,28 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="showPassword = false">取消</el-button>
-          <el-button type="primary" @click="savePassword">确定</el-button>
+          <el-button @click="showPassword = false">取 消</el-button>
+          <el-button type="primary" @click="savePassword">确 定</el-button>
         </div>
       </template>
     </el-dialog>
 
-    <!-- 改手机号的弹窗 -->
-    <!-- <el-dialog v-model="changePhoneFlag" title="绑定手机" width="400px">
-      <el-form :model="phoneForm" label-width="80px">
-        <el-form-item label="手机号">
+    <el-dialog v-model="changePhoneFlag" title="绑定手机" width="600px">
+      <el-form :model="phoneForm">
+        <el-form-item label="手机号" label-width="120px">
           <el-input
             v-model="phoneForm.phone"
             placeholder="请输入手机号"
             autocomplete="off"
           />
         </el-form-item>
-        <el-form-item label="验证码">
+        <el-form-item label="验证码" label-width="120px">
           <div class="flex w-full gap-4">
             <el-input
               class="flex-1"
               v-model="phoneForm.code"
               autocomplete="off"
-              placeholder="短信验证码"
+              placeholder="请自行设计短信服务，此处为模拟随便写"
               style="width: 300px"
             />
             <el-button type="primary" :disabled="time > 0" @click="getCode">{{
@@ -159,27 +148,26 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeChangePhone">取消</el-button>
-          <el-button type="primary" @click="changePhone">确定</el-button>
+          <el-button type="primary" @click="changePhone">更改</el-button>
         </span>
       </template>
-    </el-dialog> -->
+    </el-dialog>
 
-    <!-- 改邮箱的弹窗 -->
-    <el-dialog v-model="changeEmailFlag" title="绑定邮箱" width="400px">
-      <el-form :model="emailForm" label-width="80px">
-        <el-form-item label="邮箱">
+    <el-dialog v-model="changeEmailFlag" title="绑定邮箱" width="600px">
+      <el-form :model="emailForm">
+        <el-form-item label="邮箱" label-width="120px">
           <el-input
             v-model="emailForm.email"
             placeholder="请输入邮箱"
             autocomplete="off"
           />
         </el-form-item>
-        <el-form-item label="验证码">
+        <el-form-item label="验证码" label-width="120px">
           <div class="flex w-full gap-4">
             <el-input
               class="flex-1"
               v-model="emailForm.code"
-              placeholder="邮箱验证码"
+              placeholder="请自行设计邮件服务，此处为模拟随便写"
               autocomplete="off"
               style="width: 300px"
             />
@@ -192,29 +180,10 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeChangeEmail">取消</el-button>
-          <el-button type="primary" @click="changeEmail">确定</el-button>
+          <el-button type="primary" @click="changeEmail">更改</el-button>
         </span>
       </template>
     </el-dialog>
-
-    <!-- 改白名单的弹窗 -->
-    <el-dialog v-model="changeWhiteFlag" title="设置白名单" width="400px">
-      <!-- 改白名单的表单 -->
-      <el-form ref="whiteForm" :model="whiteData" :rules="rules" label-width="80px">
-        <el-form-item :minlength="6" label="白名单" prop="white">
-          <el-input v-model="whiteData.white" placeholder="游戏内白名单" />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="closeChangeWhite">取消</el-button>
-          <el-button type="primary" @click="submitChangeWhite">确定</el-button>
-        </div>
-      </template>
-    </el-dialog>
-
-    <!-- 结束 -->
   </div>
 </template>
 
@@ -232,33 +201,15 @@ import { useUserStore } from "@/pinia/modules/user";
 import SelectImage from "@/components/selectImage/selectImage.vue";
 
 const activeName = ref("second");
-
-// 校验 白名单 自定义规则 这玩意必须得 放在rules之前 不然TM找不到 页面就奔溃了
-const checkWhite = (rule, value, callback) => {
-  //白名单 正则
-  const newWhiteName = /^[a-zA-Z0-9_-]{3,16}$/;
-  if (!newWhiteName.test(value)) {
-    return callback(new Error("白名单仅能包含字母、数字和下划线"));
-  } else {
-    callback();
-  }
-};
-
-// 所有的表单的规则在这里声明 不单单是修改密码的规则
 const rules = reactive({
-  // 校验 白名单的规则
-  white: [{ validator: checkWhite, trigger: "blur" }],
-  // 校验 密码的规则
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 6, message: "最少6个字符", trigger: "blur" },
   ],
-  // 校验 新密码的规则
   newPassword: [
     { required: true, message: "请输入新密码", trigger: "blur" },
     { min: 6, message: "最少6个字符", trigger: "blur" },
   ],
-  // 校验 重复密码的规则
   confirmPassword: [
     { required: true, message: "请输入确认密码", trigger: "blur" },
     { min: 6, message: "最少6个字符", trigger: "blur" },
@@ -351,7 +302,6 @@ const handleClick = (tab, event) => {
   console.log(tab, event);
 };
 
-// 修改手机 viewmode
 const changePhoneFlag = ref(false);
 const time = ref(0);
 const phoneForm = reactive({
@@ -359,7 +309,6 @@ const phoneForm = reactive({
   code: "",
 });
 
-//获取手机验证码
 const getCode = async () => {
   time.value = 60;
   let timer = setInterval(() => {
@@ -371,14 +320,12 @@ const getCode = async () => {
   }, 1000);
 };
 
-//关闭 修改手机弹窗
 const closeChangePhone = () => {
   changePhoneFlag.value = false;
   phoneForm.phone = "";
   phoneForm.code = "";
 };
 
-//修改手机具体业务
 const changePhone = async () => {
   const res = await setSelfInfo({ phone: phoneForm.phone });
   if (res.code === 0) {
@@ -388,7 +335,6 @@ const changePhone = async () => {
   }
 };
 
-//修改邮箱 viemode
 const changeEmailFlag = ref(false);
 const emailTime = ref(0);
 const emailForm = reactive({
@@ -396,7 +342,6 @@ const emailForm = reactive({
   code: "",
 });
 
-//获取邮箱验证码
 const getEmailCode = async () => {
   emailTime.value = 60;
   let timer = setInterval(() => {
@@ -408,14 +353,12 @@ const getEmailCode = async () => {
   }, 1000);
 };
 
-//关闭 修改邮箱弹窗
 const closeChangeEmail = () => {
   changeEmailFlag.value = false;
   emailForm.email = "";
   emailForm.code = "";
 };
 
-//修改邮箱具体业务
 const changeEmail = async () => {
   const res = await setSelfInfo({ email: emailForm.email });
   if (res.code === 0) {
@@ -423,45 +366,6 @@ const changeEmail = async () => {
     userStore.ResetUserInfo({ email: emailForm.email });
     closeChangeEmail();
   }
-};
-
-//修改白名单弹窗 显示的标志
-const changeWhiteFlag = ref(false);
-//修改白名单表单 用于校验规则
-const whiteForm = ref(null)
-//修改白名单结构体
-const whiteData = reactive({
-  white: "",
-});
-
-//关闭 修改白名单弹窗
-const closeChangeWhite = () => {
-  changeWhiteFlag.value = false;
-  whiteData.white = "";
-};
-
-//修改白名单具体业务
-const changeWhite = async () => {
-  //用户改自己的白名单
-  const res = await setSelfInfo({ nickName: whiteData.white });
-  if (res.code === 0) {
-    ElMessage.success("白名单修改成功");
-    userStore.ResetUserInfo({ nickName: whiteData.white });
-    closeChangeWhite();
-  }
-};
-
-// 修改白名单
-const submitChangeWhite = () => {
-  //validateField 验证单个字段 https://blog.csdn.net/Alan_ran/article/details/125336443
-  whiteForm.value.validateField(["white"], async (v) => {
-    if (v) {
-      //校验通过 提交
-      changeWhite();
-    } else {
-      return false;
-    }
-  });
 };
 </script>
 

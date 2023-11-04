@@ -33,6 +33,12 @@ type ChangePasswordReq struct {
 	NewPassword string `json:"newPassword"` // 新密码
 }
 
+// Modify nick name structure 修改白名单结构体
+type ChangeNickNameReq struct {
+	ID          uint   `json:"-"`           // 从 JWT 中提取 user id，避免越权
+	NewNickName string `json:"newNickName"` // 新白名单
+}
+
 // Modify  user's auth structure
 type SetUserAuth struct {
 	AuthorityId uint `json:"authorityId"` // 角色ID

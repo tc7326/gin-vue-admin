@@ -24,4 +24,9 @@ var (
 		"Password": {NotEmpty()},
 		"Captcha":  {NotEmpty()},
 	}
+
+	//ChangeNickNameVerify 修改白名单 参数校验
+	ChangeNickNameVerify = Rules{
+		"NickName": {NotEmpty(), RegexpMatch("^[a-zA-Z0-9_-]{3,16}$")},
+	}
 )

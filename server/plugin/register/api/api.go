@@ -99,7 +99,6 @@ func (p *RegisterApi) UserRegister(c *gin.Context) {
 	//组装业务数据
 	user := &system.SysUser{
 		Username:    req.Username,
-		NickName:    req.Username,
 		Password:    req.Password,
 		AuthorityId: 1,           //用户当前的用户组
 		Authorities: authorities, //用户所有的用户组
